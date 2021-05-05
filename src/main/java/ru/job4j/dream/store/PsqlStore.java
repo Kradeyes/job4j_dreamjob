@@ -9,15 +9,17 @@ import java.io.FileReader;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Properties;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class PsqlStore implements Store {
 
     private final BasicDataSource pool = new BasicDataSource();
+    private static final Logger LOG = LoggerFactory.getLogger(PsqlStore.class.getName());
 
     private PsqlStore() {
         Properties cfg = new Properties();
@@ -63,6 +65,7 @@ public class PsqlStore implements Store {
             }
         } catch (Exception e) {
             e.printStackTrace();
+            LOG.error(e.getMessage());
         }
         return posts;
     }
@@ -80,6 +83,7 @@ public class PsqlStore implements Store {
             }
         } catch (Exception e) {
             e.printStackTrace();
+            LOG.error(e.getMessage());
         }
         return candidates;
     }
@@ -115,6 +119,7 @@ public class PsqlStore implements Store {
             }
         } catch (Exception e) {
             e.printStackTrace();
+            LOG.error(e.getMessage());
         }
         return post;
     }
@@ -132,6 +137,7 @@ public class PsqlStore implements Store {
             }
         } catch (Exception e) {
             e.printStackTrace();
+            LOG.error(e.getMessage());
         }
         return candidate;
     }
@@ -145,6 +151,7 @@ public class PsqlStore implements Store {
 
         } catch (Exception e) {
             e.printStackTrace();
+            LOG.error(e.getMessage());
         }
     }
 
@@ -157,6 +164,7 @@ public class PsqlStore implements Store {
 
         } catch (Exception e) {
             e.printStackTrace();
+            LOG.error(e.getMessage());
         }
     }
 
@@ -174,6 +182,7 @@ public class PsqlStore implements Store {
              }
         } catch (Exception e) {
             e.printStackTrace();
+            LOG.error(e.getMessage());
         }
         return post;
     }
@@ -192,6 +201,7 @@ public class PsqlStore implements Store {
             }
         } catch (Exception e) {
             e.printStackTrace();
+            LOG.error(e.getMessage());
         }
         return candidate;
     }
