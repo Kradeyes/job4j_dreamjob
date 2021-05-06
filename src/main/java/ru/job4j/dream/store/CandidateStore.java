@@ -8,4 +8,5 @@ public interface CandidateStore {
     Collection<Candidate> findAllCandidates();
     void save(Candidate candidate);
     Candidate findCandidateById(int id);
+    void delete(int id);
 }

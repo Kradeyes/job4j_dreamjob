@@ -53,7 +53,7 @@ public class PsqlCandidateStore implements CandidateStore {
     @Override
     public void save(Candidate candidate) {
         if (candidate.getId() == 0) {
-            create(candidate);
+           create(candidate);
         } else {
             update(candidate);
         }
@@ -61,9 +61,11 @@ public class PsqlCandidateStore implements CandidateStore {
 
     private Candidate create(Candidate candidate) {
         try (Connection cn = pool.getConnection();
-             PreparedStatement ps =  cn.prepareStatement("INSERT INTO candidate(name) VALUES (?)", PreparedStatement.RETURN_GENERATED_KEYS)
+             PreparedStatement ps =  cn.prepareStatement("INSERT INTO candidate(name, photo_id) VALUES (?,?)",
+                     PreparedStatement.RETURN_GENERATED_KEYS)
         ) {
             ps.setString(1, candidate.getName());
+            ps.setInt(2, candidate.getPhotoId());
             ps.execute();
             try (ResultSet id = ps.getGeneratedKeys()) {
                 if (id.next()) {
@@ -71,22 +73,21 @@ public class PsqlCandidateStore implements CandidateStore {
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
-            LOG.error(e.getMessage());
+            LOG.error(e.getMessage(), e);
         }
         return candidate;
     }
 
     private void update(Candidate candidate) {
         try (Connection cn = pool.getConnection();
-             PreparedStatement ps = cn.prepareStatement("update candidate set name = (?) where id = (?)")) {
+             PreparedStatement ps = cn.prepareStatement("update candidate set name = (?), photo_id = (?) where id = (?)")) {
             ps.setString(1, candidate.getName());
-            ps.setInt(2, candidate.getId());
+            ps.setInt(2, candidate.getPhotoId());
+            ps.setInt(3, candidate.getId());
             ps.execute();
 
         } catch (Exception e) {
-            e.printStackTrace();
-            LOG.error(e.getMessage());
+            LOG.error(e.getMessage(), e);
         }
     }
 
@@ -99,12 +100,12 @@ public class PsqlCandidateStore implements CandidateStore {
             ps.execute();
             try (ResultSet resultSet = ps.executeQuery()) {
                 if (resultSet.next()) {
-                    candidate = new Candidate(resultSet.getInt(1), resultSet.getString(2));
+                    candidate = new Candidate(resultSet.getInt(1), resultSet.getString(2),
+                            resultSet.getInt(3));
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
-            LOG.error(e.getMessage());
+            LOG.error(e.getMessage(), e);
         }
         return candidate;
     }
@@ -117,14 +118,25 @@ public class PsqlCandidateStore implements CandidateStore {
         ) {
             try (ResultSet it = ps.executeQuery()) {
                 while (it.next()) {
-                    candidates.add(new Candidate(it.getInt("id"), it.getString("name")));
+                    candidates.add(new Candidate(it.getInt("id"), it.getString("name"),
+                            it.getInt("photo_id")));
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
-            LOG.error(e.getMessage());
+            LOG.error(e.getMessage(), e);
         }
         return candidates;
     }
 
+    @Override
+    public void delete(int id) {
+        try (Connection cn = pool.getConnection();
+             PreparedStatement ps =  cn.prepareStatement("DELETE FROM candidate WHERE id=(?)")
+        ) {
+            ps.setInt(1, id);
+            ps.execute();
+        } catch (Exception e) {
+            LOG.error(e.getMessage(), e);
+        }
+    }
 }

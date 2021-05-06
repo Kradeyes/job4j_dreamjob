@@ -62,8 +62,7 @@ public class PsqlPostStore implements PostStore {
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
-            LOG.error(e.getMessage());
+            LOG.error(e.getMessage(), e);
         }
         return posts;
     }
@@ -89,8 +88,7 @@ public class PsqlPostStore implements PostStore {
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
-            LOG.error(e.getMessage());
+            LOG.error(e.getMessage(), e);
         }
         return post;
     }
@@ -103,8 +101,7 @@ public class PsqlPostStore implements PostStore {
             ps.execute();
 
         } catch (Exception e) {
-            e.printStackTrace();
-            LOG.error(e.getMessage());
+            LOG.error(e.getMessage(), e);
         }
     }
 
@@ -121,8 +118,7 @@ public class PsqlPostStore implements PostStore {
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
-            LOG.error(e.getMessage());
+            LOG.error(e.getMessage(), e);
         }
         return post;
     }

@@ -1,3 +1,6 @@
+<%@ page import="ru.job4j.dream.model.Candidate" %>
+<%@ page import="ru.job4j.dream.store.PsqlCandidateStore" %>
+<%@ page import="ru.job4j.dream.store.PsqlPhotoStore" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core" %>
 <%@ page contentType="text/html; charset=UTF-8" %>
 <!doctype html>
@@ -33,19 +36,39 @@
                     <thead>
                     <tr>
                         <th scope="col">Названия</th>
+                        <th scope="col">Фото</th>
                     </tr>
                     </thead>
                     <tbody>
-                    <c:forEach items="${candidates}" var="candidate">
+                    <% for(Candidate candidate: PsqlCandidateStore.instOf().findAllCandidates()) { %>
                         <tr>
                             <td>
-                                <a href='<c:url value="/candidate/edit.jsp?id=${candidate.id}"/>'>
+                                <a href='<%=request.getContextPath()%>/candidate/edit.jsp?id=<%=candidate.getId()%>"/>'>
                                     <i class="fa fa-edit mr-3"></i>
                                 </a>
-                                <c:out value="${candidate.name}"/>
+                                <%=candidate.getName()%>
+                                <form action="<%=request.getContextPath()%>/delete.do?id=<%=candidate.getId()%> "method="post"
+                                      enctype="application/x-www-form-urlencodeda">
+                                    <button type="submit" class="btn btn-primary">Удалить кандидата</button>
+                                </form>
+                            </td>
+                            <td>
+                                <% if (candidate.getPhotoId() > 1) { %>
+                                <%
+                                    int photoId = candidate.getPhotoId();
+                                    String photoName = PsqlPhotoStore.instOf().get(photoId);
+                                %>
+                                <a href="<%=request.getContextPath()%>/download?name=<%=photoName%>">Download</a>
+                                <br>
+                                <img src="<%=request.getContextPath()%>/download?name=<%=photoName%>" width="100px" height="100px" />
+                                <br>
+                                <% } %>
+                                <a href="<%=request.getContextPath()%>/upload?candidate_id=<%=candidate.getId()%>">
+                                    Upload
+                                </a>
                             </td>
                         </tr>
-                    </c:forEach>
+                    <% } %>
                     </tbody>
                 </table>
             </div>
