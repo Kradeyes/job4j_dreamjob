@@ -53,7 +53,7 @@
                                 </form>
                             </td>
                             <td>
-                                <% if (candidate.getPhotoId() > 1) { %>
+                                <% if (candidate.getPhotoId() > 0) { %>
                                 <%
                                     int photoId = candidate.getPhotoId();
                                     String photoName = PsqlPhotoStore.instOf().get(photoId);

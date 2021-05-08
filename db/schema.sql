@@ -3,11 +3,12 @@ CREATE TABLE post (
                       name TEXT
 );
 CREATE TABLE photo (
-                           id SERIAL PRIMARY KEY,
-                           name TEXT
+                       id SERIAL PRIMARY KEY,
+                       name TEXT
 );
 CREATE TABLE candidate (
-                      id SERIAL PRIMARY KEY,
-                      name TEXT,
-                      photo_id int references photo (id)
+                           id SERIAL PRIMARY KEY,
+                           name TEXT,
+                           photo_id int NULL,
+                           foreign key (photo_id)  references photo(id)
 );
